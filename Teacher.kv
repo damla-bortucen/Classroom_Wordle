@@ -1,0 +1,75 @@
+BoxLayout:
+    orientation: "vertical"
+    padding: ("20dp","20dp")
+    BoxLayout:
+        size_hint_y: 0.2
+        Label:
+            size_hint_x: 0.3
+            text: "Target Word: "
+        InputBox:
+            id : inputbox
+            font_size: 80
+            focus: True
+            valign : "center"
+            halign : "center"
+            multiline : False
+            text_validate_unfocus : False
+            on_text_validate : app.UdpServer(inputbox, statustext, btn)
+        Button:
+            id : btn
+            size_hint_x: 0.3
+            text: "Start"
+            on_release: app.UdpServer(inputbox, statustext, btn)
+    Label:
+        id : statustext
+        size_hint_y : 0.1
+        text: "Please input the target word (5-10 letters)"
+    ScrollView:
+        Label:
+            id : clientlist
+            canvas.before:
+                Color:
+                    rgba: 0,0.7,0.8,0.3
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text_size: self.width, None
+            size: self.texture_size
+            size_hint_y: None
+            halign : "center"
+            text: "LIST OF CONNECTED CLIENTS"
+    BoxLayout:
+        size_hint_y : 0.1
+        Button:
+            text: "Renew Target Word"
+            on_release : app.renewword(inputbox, statustext, clientlist, btn)
+        Button:
+            text: "Show Scores"
+            on_release : app.showreport()
+        Button:
+            text: "Quit Server"
+            on_press: app.quitter()
+
+<Scorepopup>:
+    auto_dismiss: False
+    title: "Score Table"
+    content_text : content_text
+    BoxLayout:
+        orientation: "vertical"
+        ScrollView:
+            effect_cls: "ScrollEffect" # prevents overscrolling
+            Label:
+                id: content_text
+                size_hint_y: None
+                height: self.texture_size[1]
+                text: "deneme"
+                text_size: (self.width-20), None
+                line_height: 1.5
+                valign: "top"
+                halign: "center"
+                font_name: "RobotoMono-Regular"
+        Button:
+            text: "Close"
+            size_hint_y: 0.1
+            height: "40dp"
+            on_press: root.dismiss()

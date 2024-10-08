@@ -1,0 +1,132 @@
+WindowManager:
+    StartScreen:
+        name: "Start"
+        on_pre_enter: self.startcallback()
+        BoxLayout:
+            padding: (50,20)
+            orientation: "vertical"
+            Label:
+                size_hint_y: 0.3
+                font_size: 40
+                text: "WORDLE"
+            BoxLayout:
+                size_hint_y: 0.2
+                Label:
+                    text: "Server Game"
+                ServerSwitch:
+                    id: ServerGame
+            Label:
+                id : msgbox
+                size_hint_y : 0.1
+            Label:
+                size_hint_y :0.3
+                text: "Number of Letters:"
+            Label:
+                id : sldlabel
+                size_hint_y: 0.2
+                text: str(sld.value)
+            Slider:
+                size_hint_y: 0.2
+                id : sld
+                min :5
+                max :9
+                step : 1
+                value :5    
+            Button:
+                size_hint_y: 0.2
+                text: "Start"
+                on_release:
+                    root.get_screen("Game").StartNewGame(sld.value,ServerGame.active,app.root, msgbox)
+
+
+
+
+
+    GameScreen:
+        name: "Game"
+        WordleRootForm:
+
+
+
+<OneLetterInput>:
+    multiline : False
+    text_validate_unfocus: False
+    halign : "center"
+    write_tab : False
+    cursor_blink : False
+    cursor_color : [1, 1, 1, 1]
+    disabled_foreground_color : [0, 0, 0, 1]
+    font_size: self.height/2
+    padding: [0, (self.height - self.line_height) / 2]
+
+
+<OneLineInput>:
+    spacing : 10
+    size_hint_y: root.boxheight
+    padding : 0,0,15,0
+
+
+<RemainingLettersForm>:
+    padding : "30dp", "10dp", 0,0
+
+
+<WordleRootForm>:
+    checkbutton: checkbutton
+    rml: rml
+    InputForm:
+        canvas:
+            Color:
+                rgba: 1, .5, .5, .5
+            Line:
+                points: self.width + 3, 0, self.width +3, self.height
+                width:4
+        id : inp
+        orientation: "vertical"
+        padding : [20,20,20,20]
+        spacing : 20
+        Button:
+            id : checkbutton
+            size_hint_y : 0.15
+            background_color: 0,0.6,0.7,1
+            font_size: 20
+            focus : False
+            text : "Check Word!"
+            on_release : inp.on_check_click(rml, checkbutton)
+    BoxLayout:
+        orientation : "vertical"
+        padding : 20,20
+        RemainingLettersForm:
+            size_hint_y: 0.5
+            id : rml
+        ScrollView:
+            size_hint_y: 0.4
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0,0.7,0.8,0.3
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                markup: True
+                text_size: self.width, None
+                size: self.texture_size
+                size_hint_y: None
+                font_size: 16
+                text: root.meaning_message
+        Label:
+            font_size: self.height/3
+            padding: [0, (self.height - self.line_height) / 2]
+            size_hint_y : 0.1
+            text: root.user_message
+        BoxLayout:
+            size_hint_y:0.1
+            Button:
+                text : "Back"
+                on_press:
+                    app.root.current = "Start"
+                    app.root.transition.direction = "right"
+            Button:
+                text: "Quit"
+                on_press: quit()
+
+
